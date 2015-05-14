@@ -384,6 +384,14 @@ app.get('/listcontainer/:userid/:containername', function(req, res){
     listContainer(req.params.userid, req.params.containername, resHandler);
 });
 
+//
+// Test
+//
+app.get('/test', function(req, res){
+    console.log('/test');
+    res.render('test.html');
+});
+
 
 // The IP address of the Cloud Foundry DEA (Droplet Execution Agent) that hosts this application:
 var host = (process.env.VCAP_APP_HOST || 'localhost');

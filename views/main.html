@@ -5,11 +5,29 @@
   <meta charset="utf-8">
   <title>IBM Bluemix Object Storage demo</title>
   <meta name="description" content="Cloud Foundry demo">
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/home.min.css" />
+  <link rel="stylesheet" href="/css/common.min.css" />
+  <!--  
+  <link rel="stylesheet" href="https://ace-home-production-20150513-124312.ng.bluemix.net/home/cache/6d14-2084412879/build/home.min.css" />
+  <link rel="stylesheet" href="https://ace-common-production-20150513-124312.ng.bluemix.net/cache/8e0c-4082226830/build/common.min.css" />
+  -->
 </head>
 
-<body>
-    <h1>The Object Store Uploader / Downloader</h1>
+<body id="body" class="bluemixHome">
+
+  <header class="bluemix-global-header no-touch" style="z-index: 99">
+    <div class="bluemix-masthead">
+      <a href="https://console.ng.bluemix.net/home/" class="bluemix-home-link bluemix-logo icon-logo-grey"></a>
+      <div class="bluemix-nav-menu-button icon-bluemix-nav-menu" tabindex="1" id="header-menu"></div>
+      <a href="https://console.ng.bluemix.net/home/" class="bluemix-branding">IBM <span class="bluemix-product-title">Bluemix</span></a></div>
+      <nav class="bluemix-nav-unauthorized">
+        <ul class="bluemix-nav-list">
+          <li class="hide-if-expired"><span><a class="bluemix-nav-list-link" href="https://console.ng.bluemix.net/?ace_base=true/#/resources">Fork</a></span></li>
+        </ul>
+      </nav>
+  </header>
+
+  <section class="main marketing-announcement-none">
 
     <div id="upload-panel">
       <form id="upload-form" enctype="multipart/form-data" action="/upload" method="post">
@@ -20,19 +38,30 @@
     </div>
 
     <div id="download-panel">
-      Files in object store container:
+      <div class="content">Your files in the Bluemix Object Store:</div>
 
       <% if(containerFiles.length > 0) { %>
-        <ul>
+        <table>
           <% for(var i=0; i < containerFiles.length; i++) { %>
-            <li><a href="/download/<%= containerFiles[i] %>"><%= containerFiles[i] %></a> [<a href="/delete/<%= containerFiles[i] %>">Delete</a>]</li>
+            <tr><td><a href="/download/<%= containerFiles[i] %>"><%= containerFiles[i] %></a></td><td>[ <a href="/delete/<%= containerFiles[i] %>">Delete</a> ]</td></tr>
           <% } %>
-        </ul>
+        </table>
       <% } else { %>
-        You have no files in your container yet.
+        <div class="content">You have no files in your container yet.</div>
       <% } %>
 
     </div>
 
-  </body>
+ </section>
+
+  <section class="sub-nav-container">
+    <nav class="sub-nav" role="navigation" id="content-nav">
+      <ul>
+        <li><a class="nav-item" id="nav-item-build" data-destination="#bluemix-build">IBM Bluemix</a></li>
+        <li><a class="nav-item" id="nav-item-extend" data-destination="#bluemix-extend">IBM DevOps Services</a></li>
+      </ul>
+    </nav>
+  </section>
+
+</body>
 </html>
