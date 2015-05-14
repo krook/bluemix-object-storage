@@ -1,0 +1,20 @@
+{
+  "name": "nodejs-object-storage",
+  "version": "0.0.1",
+  "description": "A sample Node.js and Object Storage app for Bluemix",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "ejs": "^2.3.1",
+    "express": "3.4.7",
+    "jade": "1.1.4",
+    "mocha": "^2.2.1",
+    "multer": "^0.1.8",
+    "request": "^2.53.0"
+  },
+  "engines": {
+    "node": "0.10.*"
+  },
+  "repository": {}
+}

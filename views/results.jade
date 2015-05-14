@@ -1,0 +1,6 @@
+extends layout
+block content
+  div(id="results")
+    h2
+      pre
+        !=JSON.stringify(body, null, 2)
