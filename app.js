@@ -8,7 +8,24 @@ var USER = "user"
 var CONTAINER = "usercontainer"
 
 // Retrieve the environment variables provided by Bluemix (Cloud Foundry)
-// 
+// This will be exposed as a JSON object:
+/*
+{
+  "objectstorage": [
+    {
+      "name": "object-storage",
+      "label": "objectstorage",
+      "plan": "free",
+      "credentials": {
+        "auth_uri": "https://swift.ng.bluemix.net/auth/abc123",
+        "global_account_auth_uri": "https://swift.ng.bluemix.net/global_auth/abc123",
+        "username": "abc123",
+        "password": "abc123"
+      }
+    }
+  ]
+}
+*/
 var serviceInfo = JSON.parse(process.env.VCAP_SERVICES || '{}');
 var appInfo = JSON.parse(process.env.VCAP_APPLICATION || "{}");
 
@@ -238,7 +255,7 @@ app.get('/', function(req, res){
 });
 
 //
-// Upload
+// Upload file.
 //
 app.post('/upload', function(req, res){
     console.log('/upload');
@@ -246,7 +263,7 @@ app.post('/upload', function(req, res){
 });
 
 //
-// Download
+// Download download or display file.
 //
 app.get('/download/:objname', function(req, res){
     console.log('/download/:objname');
@@ -282,7 +299,7 @@ app.get('/download/:objname', function(req, res){
 });
 
 //
-// Delete
+// Delete file.
 //
 app.get('/delete/:objname', function(req, res){
     console.log('/delete/:objname');
@@ -307,7 +324,7 @@ var saveTokenResponseToCache = function(userid, token, url) {
 
 
 //
-// Get token
+// Get token.
 //
 app.get('/gettoken/:userid', function(req, res){
     console.log('/gettoken/:userid');
@@ -324,7 +341,7 @@ app.get('/gettoken/:userid', function(req, res){
 });
 
 //
-// Create container
+// Create container.
 //
 app.get('/createcontainer/:userid/:containername', function(req, res){
     console.log('/createcontainer/:userid/:containername');
@@ -340,7 +357,7 @@ app.get('/createcontainer/:userid/:containername', function(req, res){
 });
 
 //
-// Write object
+// Write object.
 //
 app.get('/writeobj/:userid/:containername/:objname', function(req, res){
     console.log('/writeobj/:userid/:containername/:objname');
@@ -356,7 +373,7 @@ app.get('/writeobj/:userid/:containername/:objname', function(req, res){
 });
 
 //
-// Read object
+// Read object.
 //
 app.get('/readobj/:userid/:containername/:objname', function(req, res){
     console.log('/readobj/:userid/:containername/:objname');
@@ -372,7 +389,7 @@ app.get('/readobj/:userid/:containername/:objname', function(req, res){
 });
 
 //
-// List files in container
+// List files in container.
 //
 app.get('/listcontainer/:userid/:containername', function(req, res){
     console.log('/listcontainer/:userid/:containername');
@@ -389,7 +406,7 @@ app.get('/listcontainer/:userid/:containername', function(req, res){
 });
 
 //
-// Test
+// Test design.
 //
 app.get('/test', function(req, res){
     console.log('/test');

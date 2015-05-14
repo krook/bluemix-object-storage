@@ -11,8 +11,8 @@ Follow these steps to set up a Bluemix account, provision an instance of the Swi
 
 * Create an instance of the Object Store service through the Bluemix catalog UI (v1, not v2). Name the service 'object-store' so that it matches the manifest file and leave it unbound.
 
-![Object Storage in the Bluemix catalog](https://github.com/krook/bluemix-object-storage/tree/master/public/img/object-storage-tile.png)
-![Configuring the Object Storage](https://github.com/krook/bluemix-object-storage/tree/master/public/img/configuration.png)
+![Object Storage in the Bluemix catalog](https://github.com/krook/bluemix-object-storage/blob/master/public/img/object-storage-tile.png)
+![Configuring the Object Storage](https://github.com/krook/bluemix-object-storage/blob/master/public/img/configuration.png)
 
 * Sign up for the [IBM DevOps Service](http://hub.jazz.net/).
 

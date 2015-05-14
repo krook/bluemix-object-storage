@@ -39,7 +39,7 @@
       <% if(containerFiles.length > 0) { %>
         <table>
           <% for(var i=0; i < containerFiles.length; i++) { %>
-            <tr><td style="color: white;"><a href="/download/<%= containerFiles[i] %>" style="color: white;"><%= containerFiles[i] %></a></td><td>[ <a href="/delete/<%= containerFiles[i] %>" style="color: white;">Delete</a> ]</td></tr>
+            <tr><td style="color: white;"><a href="/download/<%= containerFiles[i] %>" style="color: white;"><%= containerFiles[i] %></a></td><td><a href="/delete/<%= containerFiles[i] %>" style="color: white;">Delete</a> </td></tr>
           <% } %>
         </table>
       <% } else { %>
