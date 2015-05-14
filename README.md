@@ -16,12 +16,12 @@ Follow these steps to set up a Bluemix account, provision an instance of the Swi
 
 * Sign up for the [IBM DevOps Service](http://hub.jazz.net/).
 
-* Fork the [bluemix-object-storage](http://github.com/krook/bluemix-object-storage) repository to get the application code (public project, uncheck scrum features, create Bluemix project).
+* Fork the [bluemix-object-storage](http://github.com/krook/bluemix-object-storage) repository to get the application code (make it a public project, uncheck add scrum features, check create Bluemix project).
 
-* Deploy the application to Bluemix.
+* Deploy the application to Bluemix using the Deploy button.
 
 * Access the application via the URL to upload / view / delete any text, image, and PDF files.
 
 * Scale the front end and provide a blue/green deployment process.
 
-* Other services.
+* Binding to other services.
