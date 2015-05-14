@@ -8,6 +8,7 @@ var USER = "user"
 var CONTAINER = "usercontainer"
 
 // Retrieve the environment variables provided by Bluemix (Cloud Foundry)
+// 
 var serviceInfo = JSON.parse(process.env.VCAP_SERVICES || '{}');
 var appInfo = JSON.parse(process.env.VCAP_APPLICATION || "{}");
 
