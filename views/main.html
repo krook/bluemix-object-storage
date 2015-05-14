@@ -7,10 +7,6 @@
   <meta name="description" content="Cloud Foundry demo">
   <link rel="stylesheet" href="/css/home.min.css" />
   <link rel="stylesheet" href="/css/common.min.css" />
-  <!--  
-  <link rel="stylesheet" href="https://ace-home-production-20150513-124312.ng.bluemix.net/home/cache/6d14-2084412879/build/home.min.css" />
-  <link rel="stylesheet" href="https://ace-common-production-20150513-124312.ng.bluemix.net/cache/8e0c-4082226830/build/common.min.css" />
-  -->
 </head>
 
 <body id="body" class="bluemixHome">
@@ -31,14 +27,14 @@
 
     <div id="upload-panel">
       <form id="upload-form" enctype="multipart/form-data" action="/upload" method="post">
-        Upload a file:
+        <h3 class="sub-title">Upload a file:</h3>
         <input type="file" name="file-to-upload" />
         <input type="submit" value="Upload File" name="submit">
       </form>
     </div>
 
     <div id="download-panel">
-      <div class="content">Your files in the Bluemix Object Store:</div>
+      <h3 class="sub-title">Your files in the Bluemix Object Store:</h3>
 
       <% if(containerFiles.length > 0) { %>
         <table>
@@ -47,7 +43,7 @@
           <% } %>
         </table>
       <% } else { %>
-        <div class="content">You have no files in your container yet.</div>
+        <h3 class="sub-title">ou have no files in your container yet.</h3>
       <% } %>
 
     </div>

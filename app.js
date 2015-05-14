@@ -7,14 +7,14 @@ var request = require('request');
 var USER = "user"
 var CONTAINER = "usercontainer"
 
-// Environment variables provided by Bluemix
-var appInfo = JSON.parse(process.env.VCAP_APPLICATION || "{}");
+// Retrieve the environment variables provided by Bluemix (Cloud Foundry)
 var serviceInfo = JSON.parse(process.env.VCAP_SERVICES || '{}');
+var appInfo = JSON.parse(process.env.VCAP_APPLICATION || "{}");
 
-console.log("--- App object: ");
-console.log(appInfo);
 console.log("--- Services object: ");
 console.log(serviceInfo);
+console.log("--- App object: ");
+console.log(appInfo);
 console.log("--- Credentials object: ");
 if (Object.keys(serviceInfo).length > 0) {
   console.log(serviceInfo['objectstorage'][0]['credentials']);
@@ -95,7 +95,10 @@ var getToken = function(userid, callback) {
     request(reqOptions, callback);
 }
 
-// Must have called the token method before this one to init (userInfo)
+
+//
+// Bluemix Object Storage service API functions
+//
 var createContainer = function(userid, containername, callback) {
     console.log('createContainer');
     var userInfo = cache[userid];
