@@ -1,7 +1,7 @@
 applications:
 - disk_quota: 1024M
   name: bluemix-object-storage
-  host: bos-krook
+  host: bluemix-object-storage
   #host: bos-${random-word}
   path: .
   domain: mybluemix.net

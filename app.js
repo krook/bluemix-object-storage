@@ -236,7 +236,7 @@ var renderIndex = function(res, containerListingJSON) {
 // URL mappings to the Bluemix Object Storage service functions above  ----------------------------
 
 // Main entry point to the app
-app.get('/', function(req, res){
+app.get('/', function(req, res) {
     console.log('/');
 
     if (Object.keys(serviceInfo).length > 0) {
@@ -278,13 +278,13 @@ app.get('/', function(req, res){
 });
 
 // Upload a file. Uses the multer middleware.
-app.post('/upload', function(req, res){
+app.post('/upload', function(req, res) {
     console.log('/upload');
     res.render('pages/upload-success.html');
 });
 
 // Download or display a given file.
-app.get('/download/:objname', function(req, res){
+app.get('/download/:objname', function(req, res) {
     console.log('/download/:objname');
     var resHandler = function(error, response, body) {
         if (!error && response.statusCode == 200) {
@@ -317,7 +317,7 @@ app.get('/download/:objname', function(req, res){
 });
 
 // Delete the given file.
-app.get('/delete/:objname', function(req, res){
+app.get('/delete/:objname', function(req, res) {
     console.log('/delete/:objname');
     var resHandler = function(error, response, body) {
         if (!error && response.statusCode == 204) {
@@ -330,7 +330,7 @@ app.get('/delete/:objname', function(req, res){
 });
 
 // Get the authorization token.
-app.get('/gettoken/:userid', function(req, res){
+app.get('/gettoken/:userid', function(req, res) {
     console.log('/gettoken/:userid');
     var resHandler = function(error, response, res_body) {
         var body = {};
@@ -345,7 +345,7 @@ app.get('/gettoken/:userid', function(req, res){
 });
 
 // Create a container.
-app.get('/createcontainer/:userid/:containername', function(req, res){
+app.get('/createcontainer/:userid/:containername', function(req, res) {
     console.log('/createcontainer/:userid/:containername');
     var resHandler = function(error, response, body) {
         if (!error && (response.statusCode == 201 || response.statusCode == 204)) {
@@ -359,7 +359,7 @@ app.get('/createcontainer/:userid/:containername', function(req, res){
 });
 
 // Write an object.
-app.get('/writeobj/:userid/:containername/:objname', function(req, res){
+app.get('/writeobj/:userid/:containername/:objname', function(req, res) {
     console.log('/writeobj/:userid/:containername/:objname');
     var resHandler = function(error, response, body) {
         if (!error && response.statusCode == 201) {
@@ -373,7 +373,7 @@ app.get('/writeobj/:userid/:containername/:objname', function(req, res){
 });
 
 // Read an object.
-app.get('/readobj/:userid/:containername/:objname', function(req, res){
+app.get('/readobj/:userid/:containername/:objname', function(req, res) {
     console.log('/readobj/:userid/:containername/:objname');
     var resHandler = function(error, response, body) {
         if (!error && response.statusCode == 200) {
@@ -387,7 +387,7 @@ app.get('/readobj/:userid/:containername/:objname', function(req, res){
 });
 
 // List the files in the container.
-app.get('/listcontainer/:userid/:containername', function(req, res){
+app.get('/listcontainer/:userid/:containername', function(req, res) {
     console.log('/listcontainer/:userid/:containername');
     var resHandler = function(error, response, body) {
         if (!error && response.statusCode == 200) {
