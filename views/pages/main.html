@@ -1,30 +1,27 @@
 <% include ../partials/header.html %>
 
 <div id="upload-panel">
+  <div class="title-block">
+  <h1 class="title">Upload a file</h1>
   <form id="upload-form" enctype="multipart/form-data" action="/upload" method="post">
-    <div class="title-block">
-    <h3 class="sub-title">Upload a file</h3>
     <input type="file" name="file-to-upload" style="color: white;" />
     <input type="submit" value="Upload File" name="submit" />
-  </div>
   </form>
+  </div>
 </div>
 
 <div id="download-panel">
-
   <% if(containerFiles.length > 0) { %>
   <div class="title-block">
-  <h1 class="title">Your files in the Bluemix Object Store</h3>
+  <h1 class="title">Your files</h1>
     <table>
-      <% for(var i=0; i < containerFiles.length; i++) { %>
+      <% for (var i = 0; i < containerFiles.length; i++) { %>
         <tr>
             <td style="color: white;"><a href="/download/<%= containerFiles[i] %>" style="color: white;"><%= containerFiles[i] %></a></td>
             <td><a href="/delete/<%= containerFiles[i] %>" style="color: white; padding-left: 10px;">Delete</a></td>
         </tr>
       <% } %>
     </table>
-  <% } else { %>
-    <h1 class="title">You have no files in the Bluemix Object Store</h3>
   <% } %>
 </div>
 
