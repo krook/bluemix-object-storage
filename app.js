@@ -31,8 +31,10 @@ var appInfo = JSON.parse(process.env.VCAP_APPLICATION || "{}");
 
 console.log("--- Services object: ");
 console.log(serviceInfo);
+
 console.log("--- App object: ");
 console.log(appInfo);
+
 console.log("--- Credentials object: ");
 if (Object.keys(serviceInfo).length > 0) {
   console.log(serviceInfo['objectstorage'][0]['credentials']);
@@ -41,6 +43,7 @@ if (Object.keys(serviceInfo).length > 0) {
 var cache = {};
 var auth = null;
 
+// Web framework setup ----------------------------------------------------------------------------
 var app = express();
 
 // Configure file upload handling using multer
@@ -70,10 +73,10 @@ app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views'); 
 app.engine('html', require('ejs').renderFile);
 
+// ------------------------------------------------------------------------------------------------
 
-//
-// Utility methods
-//
+
+// Utility methods --------------------------------------------------------------------------------
 String.prototype.endsWith = function(suffix) {
     return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
@@ -113,10 +116,10 @@ var getToken = function(userid, callback) {
     request(reqOptions, callback);
 }
 
+// ------------------------------------------------------------------------------------------------
 
-//
-// Bluemix Object Storage service API functions
-//
+
+// Bluemix Object Storage service API functions ---------------------------------------------------
 var createContainer = function(userid, containername, callback) {
     console.log('createContainer');
     var userInfo = cache[userid];
@@ -204,15 +207,12 @@ var renderIndex = function(res, containerListingJSON) {
     res.render('main.html', { containerFiles: containerFiles });
 }
 
-//
-//
-// REST API definitions
-//
-//
+// ------------------------------------------------------------------------------------------------
 
-//
-// Get index page
-//
+
+// REST API definitions ---------------------------------------------------------------------------
+
+// Main entry point to the app
 app.get('/', function(req, res){
     console.log('/');
 
@@ -254,17 +254,13 @@ app.get('/', function(req, res){
 
 });
 
-//
 // Upload file.
-//
 app.post('/upload', function(req, res){
     console.log('/upload');
     res.render('upload-success.html');
 });
 
-//
-// Download download or display file.
-//
+// Download or display file.
 app.get('/download/:objname', function(req, res){
     console.log('/download/:objname');
     var resHandler = function(error, response, body) {
@@ -291,30 +287,26 @@ app.get('/download/:objname', function(req, res){
             res.writeHead(200, {"Content-Type": contentType});
             res.end(data, 'binary');
         } else {
-            res.writeHead(200, {"Content-Type": "text/html"});
-            res.end('Failed downloading ' + req.params.objname);
+            res.render('download-failure.html', { fileName: req.params.objname });
         }
     };
     downloadFileFromSwift(USER, CONTAINER, req.params.objname, resHandler);
 });
 
-//
 // Delete file.
-//
 app.get('/delete/:objname', function(req, res){
     console.log('/delete/:objname');
     var resHandler = function(error, response, body) {
         if (!error && response.statusCode == 204) {
-            res.writeHead(200, {"Content-Type": "text/html"});
-            res.end('Delete succeeded, please return to <a href="/">the main page</a>');
+            res.render('delete-success.html');
         } else {
-            res.writeHead(200, {"Content-Type": "text/html"});
-            res.end('Delete did not succeed, please return to <a href="/">the main page</a> (Response Code: ' + response.statusCode + ', Error: ' + error + ')');
+            res.render('delete-failure.html', { errorCode: response.statusCode, errorMsg: error });
         }
     };
     deleteFileFromSwift(USER, CONTAINER, req.params.objname, resHandler);
 });
 
+// Save the Swift service authorization token.
 var saveTokenResponseToCache = function(userid, token, url) {
     console.log('saveTokenResponseToCache');
     var body = {"userid": userid, "token": token, "url": url};
@@ -322,10 +314,7 @@ var saveTokenResponseToCache = function(userid, token, url) {
     return body;
 }
 
-
-//
 // Get token.
-//
 app.get('/gettoken/:userid', function(req, res){
     console.log('/gettoken/:userid');
     var resHandler = function(error, response, res_body) {
@@ -340,9 +329,7 @@ app.get('/gettoken/:userid', function(req, res){
     getToken(req.params.userid, resHandler);
 });
 
-//
 // Create container.
-//
 app.get('/createcontainer/:userid/:containername', function(req, res){
     console.log('/createcontainer/:userid/:containername');
     var resHandler = function(error, response, body) {
@@ -356,9 +343,7 @@ app.get('/createcontainer/:userid/:containername', function(req, res){
     createContainer(req.params.userid, req.params.containername, resHandler);
 });
 
-//
 // Write object.
-//
 app.get('/writeobj/:userid/:containername/:objname', function(req, res){
     console.log('/writeobj/:userid/:containername/:objname');
     var resHandler = function(error, response, body) {
@@ -372,9 +357,7 @@ app.get('/writeobj/:userid/:containername/:objname', function(req, res){
     uploadFileToSwift(req.params.userid, req.params.containername, req.params.objname, "Some random data",  resHandler);
 });
 
-//
 // Read object.
-//
 app.get('/readobj/:userid/:containername/:objname', function(req, res){
     console.log('/readobj/:userid/:containername/:objname');
     var resHandler = function(error, response, body) {
@@ -388,9 +371,7 @@ app.get('/readobj/:userid/:containername/:objname', function(req, res){
     downloadFileFromSwift(req.params.userid, req.params.containername, req.params.objname,  resHandler);
 });
 
-//
 // List files in container.
-//
 app.get('/listcontainer/:userid/:containername', function(req, res){
     console.log('/listcontainer/:userid/:containername');
     var resHandler = function(error, response, body) {
@@ -405,9 +386,7 @@ app.get('/listcontainer/:userid/:containername', function(req, res){
     listContainer(req.params.userid, req.params.containername, resHandler);
 });
 
-//
 // Test design.
-//
 app.get('/test', function(req, res){
     console.log('/test');
     res.render('test.html');
