@@ -204,7 +204,7 @@ var renderIndex = function(res, containerListingJSON) {
     containerFiles = fileList.map(function(val) {
         return val.name
     });
-    res.render('main.html', { containerFiles: containerFiles });
+    res.render('pages/main.html', { containerFiles: containerFiles });
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -249,7 +249,7 @@ app.get('/', function(req, res){
       });
 
     } else {
-      res.render('no-object-storage.html');
+      res.render('pages/no-object-storage.html');
     }
 
 });
@@ -257,7 +257,7 @@ app.get('/', function(req, res){
 // Upload file.
 app.post('/upload', function(req, res){
     console.log('/upload');
-    res.render('upload-success.html');
+    res.render('pages/upload-success.html');
 });
 
 // Download or display file.
@@ -287,7 +287,7 @@ app.get('/download/:objname', function(req, res){
             res.writeHead(200, {"Content-Type": contentType});
             res.end(data, 'binary');
         } else {
-            res.render('download-failure.html', { fileName: req.params.objname });
+            res.render('pages/download-failure.html', { fileName: req.params.objname });
         }
     };
     downloadFileFromSwift(USER, CONTAINER, req.params.objname, resHandler);
@@ -298,9 +298,9 @@ app.get('/delete/:objname', function(req, res){
     console.log('/delete/:objname');
     var resHandler = function(error, response, body) {
         if (!error && response.statusCode == 204) {
-            res.render('delete-success.html');
+            res.render('pages/delete-success.html');
         } else {
-            res.render('delete-failure.html', { errorCode: response.statusCode, errorMsg: error });
+            res.render('pages/delete-failure.html', { errorCode: response.statusCode, errorMsg: error });
         }
     };
     deleteFileFromSwift(USER, CONTAINER, req.params.objname, resHandler);
@@ -389,7 +389,7 @@ app.get('/listcontainer/:userid/:containername', function(req, res){
 // Test design.
 app.get('/test', function(req, res){
     console.log('/test');
-    res.render('test.html');
+    res.render('pages/test.html');
 });
 
 
