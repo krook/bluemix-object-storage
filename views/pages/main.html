@@ -2,7 +2,7 @@
 
 <div id="upload-panel">
   <div class="title-block">
-  <h1 class="title">Upload a file</h1>
+  <h1 class="title"><span class="thin">Upload a file</span></h1>
   <form id="upload-form" enctype="multipart/form-data" action="/upload" method="post">
     <input type="file" name="file-to-upload" style="color: white;" />
     <input type="submit" value="Upload File" name="submit" />
@@ -13,7 +13,7 @@
 <div id="download-panel">
   <% if(containerFiles.length > 0) { %>
   <div class="title-block">
-  <h1 class="title">Your files</h1>
+  <h1 class="title"><span class="thin">Your files</span></h1>
     <table>
       <% for (var i = 0; i < containerFiles.length; i++) { %>
         <tr>
