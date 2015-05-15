@@ -4,11 +4,17 @@ var express = require('express');
 var multer  = require('multer');
 var request = require('request');
 
+
+// Variable definitions ---------------------------------------------------------------------------
 var USER = "user"
 var CONTAINER = "usercontainer"
 
 // Retrieve the environment variables provided by Bluemix (Cloud Foundry)
-// This will be exposed as a JSON object:
+var appInfo = JSON.parse(process.env.VCAP_APPLICATION || "{}");
+var serviceInfo = JSON.parse(process.env.VCAP_SERVICES || '{}');
+
+// VCAP_APPLICATION will provide information about this application when deployed.
+// VCAP_SERVICES will be exposed as a JSON object with each bound service as a member:
 /*
 {
   "objectstorage": [
@@ -26,22 +32,22 @@ var CONTAINER = "usercontainer"
   ]
 }
 */
-var serviceInfo = JSON.parse(process.env.VCAP_SERVICES || '{}');
-var appInfo = JSON.parse(process.env.VCAP_APPLICATION || "{}");
 
-console.log("--- Services object: ");
+console.log("--- VCAP_SERVICES object: ");
 console.log(serviceInfo);
 
-console.log("--- App object: ");
+console.log("--- VCAP_APPLICATION object: ");
 console.log(appInfo);
 
-console.log("--- Credentials object: ");
+console.log("--- Object Storage service credentials: ");
 if (Object.keys(serviceInfo).length > 0) {
   console.log(serviceInfo['objectstorage'][0]['credentials']);
 }
 
+// To hold state.
 var cache = {};
 var auth = null;
+
 
 // Web framework setup ----------------------------------------------------------------------------
 var app = express();
@@ -72,6 +78,16 @@ app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views'); 
 app.engine('html', require('ejs').renderFile);
+
+// Use the IP address of the Cloud Foundry DEA (Droplet Execution Agent) that hosts this application
+var host = (process.env.VCAP_APP_HOST || 'localhost');
+
+// Use the port on the DEA for communication with the application
+var port = (process.env.VCAP_APP_PORT || 3000);
+
+// Start server
+app.listen(port, host);
+console.log('Node Object Storage app started on port ' + port);
 
 // ------------------------------------------------------------------------------------------------
 
@@ -116,10 +132,17 @@ var getToken = function(userid, callback) {
     request(reqOptions, callback);
 }
 
+var saveTokenResponseToCache = function(userid, token, url) {
+    console.log('saveTokenResponseToCache');
+    var body = {"userid": userid, "token": token, "url": url};
+    cache[userid] = body;
+    return body;
+}
+
 // ------------------------------------------------------------------------------------------------
 
 
-// Bluemix Object Storage service API functions ---------------------------------------------------
+// Functions that call the Bluemix Object Storage service API -------------------------------------
 var createContainer = function(userid, containername, callback) {
     console.log('createContainer');
     var userInfo = cache[userid];
@@ -210,7 +233,7 @@ var renderIndex = function(res, containerListingJSON) {
 // ------------------------------------------------------------------------------------------------
 
 
-// REST API definitions ---------------------------------------------------------------------------
+// URL mappings to the Bluemix Object Storage service functions above  ----------------------------
 
 // Main entry point to the app
 app.get('/', function(req, res){
@@ -254,13 +277,13 @@ app.get('/', function(req, res){
 
 });
 
-// Upload file.
+// Upload a file. Uses the multer middleware.
 app.post('/upload', function(req, res){
     console.log('/upload');
     res.render('pages/upload-success.html');
 });
 
-// Download or display file.
+// Download or display a given file.
 app.get('/download/:objname', function(req, res){
     console.log('/download/:objname');
     var resHandler = function(error, response, body) {
@@ -293,7 +316,7 @@ app.get('/download/:objname', function(req, res){
     downloadFileFromSwift(USER, CONTAINER, req.params.objname, resHandler);
 });
 
-// Delete file.
+// Delete the given file.
 app.get('/delete/:objname', function(req, res){
     console.log('/delete/:objname');
     var resHandler = function(error, response, body) {
@@ -306,15 +329,7 @@ app.get('/delete/:objname', function(req, res){
     deleteFileFromSwift(USER, CONTAINER, req.params.objname, resHandler);
 });
 
-// Save the Swift service authorization token.
-var saveTokenResponseToCache = function(userid, token, url) {
-    console.log('saveTokenResponseToCache');
-    var body = {"userid": userid, "token": token, "url": url};
-    cache[userid] = body;
-    return body;
-}
-
-// Get token.
+// Get the authorization token.
 app.get('/gettoken/:userid', function(req, res){
     console.log('/gettoken/:userid');
     var resHandler = function(error, response, res_body) {
@@ -329,7 +344,7 @@ app.get('/gettoken/:userid', function(req, res){
     getToken(req.params.userid, resHandler);
 });
 
-// Create container.
+// Create a container.
 app.get('/createcontainer/:userid/:containername', function(req, res){
     console.log('/createcontainer/:userid/:containername');
     var resHandler = function(error, response, body) {
@@ -343,7 +358,7 @@ app.get('/createcontainer/:userid/:containername', function(req, res){
     createContainer(req.params.userid, req.params.containername, resHandler);
 });
 
-// Write object.
+// Write an object.
 app.get('/writeobj/:userid/:containername/:objname', function(req, res){
     console.log('/writeobj/:userid/:containername/:objname');
     var resHandler = function(error, response, body) {
@@ -357,7 +372,7 @@ app.get('/writeobj/:userid/:containername/:objname', function(req, res){
     uploadFileToSwift(req.params.userid, req.params.containername, req.params.objname, "Some random data",  resHandler);
 });
 
-// Read object.
+// Read an object.
 app.get('/readobj/:userid/:containername/:objname', function(req, res){
     console.log('/readobj/:userid/:containername/:objname');
     var resHandler = function(error, response, body) {
@@ -371,7 +386,7 @@ app.get('/readobj/:userid/:containername/:objname', function(req, res){
     downloadFileFromSwift(req.params.userid, req.params.containername, req.params.objname,  resHandler);
 });
 
-// List files in container.
+// List the files in the container.
 app.get('/listcontainer/:userid/:containername', function(req, res){
     console.log('/listcontainer/:userid/:containername');
     var resHandler = function(error, response, body) {
@@ -386,20 +401,4 @@ app.get('/listcontainer/:userid/:containername', function(req, res){
     listContainer(req.params.userid, req.params.containername, resHandler);
 });
 
-// Test design.
-app.get('/test', function(req, res){
-    console.log('/test');
-    res.render('pages/test.html');
-});
-
-
-// The IP address of the Cloud Foundry DEA (Droplet Execution Agent) that hosts this application:
-var host = (process.env.VCAP_APP_HOST || 'localhost');
-
-// The port on the DEA for communication with the application:
-var port = (process.env.VCAP_APP_PORT || 3000);
-
-// Start server
-app.listen(port, host);
-console.log('Node Object Storage app started on port ' + port);
-
+// ------------------------------------------------------------------------------------------------
